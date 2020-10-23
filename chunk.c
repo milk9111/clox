@@ -86,7 +86,7 @@ int addConstant(Chunk* chunk, Value value) {
     return chunk->constants.count - 1;
 }
 
-void writeConstant(Chunk* chunk, Value value, int line) {
+int writeConstant(Chunk* chunk, Value value, int line) {
     int constantIndex = addConstant(chunk, value);
 
     OpCode opCode = OP_CONSTANT;
@@ -97,13 +97,17 @@ void writeConstant(Chunk* chunk, Value value, int line) {
     writeChunk(chunk, opCode, line);
 
     if (opCode == OP_CONSTANT_LONG) {
+        writeChunk(chunk, (constantIndex&0xF0000000)>>28, line);
+        writeChunk(chunk, (constantIndex&0xF000000)>>24, line);
         writeChunk(chunk, (constantIndex&0xF00000)>>20, line);
         writeChunk(chunk, (constantIndex&0xF0000)>>16, line);
         writeChunk(chunk, (constantIndex&0xF000)>>12, line);
-        writeChunk(chunk, (constantIndex&0x0F00)>>8, line);
-        writeChunk(chunk, (constantIndex&0x00F0)>>4, line);
-        writeChunk(chunk, constantIndex&0x000F, line);
+        writeChunk(chunk, (constantIndex&0xF00)>>8, line);
+        writeChunk(chunk, (constantIndex&0xF0)>>4, line);
+        writeChunk(chunk, constantIndex&0xF, line);
     } else {
         writeChunk(chunk, constantIndex, line);
     }
+
+    return constantIndex;
 }
