@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-I.
-DEPS = common.h chunk.h memory.h debug.h value.h vm.h compiler.h scanner.h
-OBJ =  main.o chunk.o memory.o debug.o value.o vm.o compiler.o scanner.o
+DEPS = common.h chunk.h memory.h debug.h value.h vm.h compiler.h scanner.h object.h
+OBJ =  main.o chunk.o memory.o debug.o value.o vm.o compiler.o scanner.o object.o
 
 %.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
